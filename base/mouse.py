@@ -26,6 +26,7 @@ def drag(handle, start_xy, end_xy, speed=20):
     win32gui.SendMessage(handle, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON, _w_param(x, y))
     for i in range(speed):
         time.sleep(0.05)
+        # TODO: refactor
         nx = x0 + int((x1 - x0) / speed * (i + 1))
         ny = y0 + int((y1 - y0) / speed * (i + 1))
         win32gui.PostMessage(handle, win32con.WM_MOUSEMOVE, win32con.MK_LBUTTON,
