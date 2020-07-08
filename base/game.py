@@ -38,13 +38,35 @@ class Game:
     def sign_out(self):
         pass
 
-    def click(self):
-        pass
+    def _detect_position(self, param, retry_time=2):
+        if isinstance(param, str):
+            im = cv2.imread(param)
+            param = image.resize(im, self.cfg.get('resource_background_resolution', [1920, 1080]), self.window_size)
+        if isinstance(param, np.ndarray):
+            for _ in range(retry_time):
+                position = image.detect_img_template(param, window.prtscn(self.handle),
+                                                     self.cfg.get("template_threshold", 0.8))
+                if position:
+                    return position
+        return []
 
-    def drag(self):
-        pass
+    def click(self, param, retry_time=2):
+        if isinstance(param, str):
+            param = self._detect_position(param)
+            if not param:
+                return
+        if isinstance(param, tuple) or isinstance(param, list):
+            mouse.click(self.handle, param, self.cfg.get('click_offset', 8))
 
-    def back(self):
+    def drag(self, param, end_xy):
+        if isinstance(param, str):
+            param = self._detect_position(param)
+            if not param:
+                return
+        if isinstance(param, tuple) or isinstance(param, list):
+            mouse.drag(self.handle, param, end_xy, self.cfg.get('drag_speed', 20))
+
+    def backward(self):
         pass
 
     def forward(self):
