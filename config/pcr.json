@@ -3,6 +3,7 @@
   "template_threshold": 0.8,
   "click_offset": 8,
   "drag_speed": 20,
+  "resource_dir": "../resources/pcr",
   "resource_background_resolution": [
     1920,
     1080
