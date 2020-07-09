@@ -49,10 +49,14 @@ class Game:
     def sign_out(self):
         pass
 
+    def _read_resized_im(self, im_path):
+        im = cv2.imread(im_path)
+        im_resize = image.resize(im, self.cfg.get('resource_background_resolution', [1920, 1080]), self.window_size)
+        return im_resize
+
     def _detect_position(self, param, retry_time=2):
         if isinstance(param, str):
-            im = cv2.imread(param)
-            param = image.resize(im, self.cfg.get('resource_background_resolution', [1920, 1080]), self.window_size)
+            param = self._read_resized_im(param)
         if isinstance(param, np.ndarray):
             for _ in range(retry_time):
                 position = image.detect_img_template(param, window.prtscn(self.handle),
@@ -61,7 +65,7 @@ class Game:
                     return position
         return []
 
-    def click(self, param, retry_time=2):
+    def click(self, param):
         if isinstance(param, str):
             param = self._detect_position(param)
             if not param:
@@ -80,5 +84,19 @@ class Game:
     def backward(self):
         pass
 
-    def forward(self):
-        pass
+    def forward(self, page_key, button=None, timeout=90):
+        if button:
+            button_file = self.resources.get('button', dict()).get(button, None)
+            while timeout > 0:
+                position = self._detect_position(button_file)
+                if position:
+                    self.click(position)
+                    break
+                timeout -= 1
+        page_key_file = self.resources.get('page_key', dict()).get(page_key, None)
+        if page_key_file:
+            while timeout > 0:
+                position = self._detect_position(page_key_file)
+                if position:
+                    break
+                timeout -= 1
