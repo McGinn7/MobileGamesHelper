@@ -1,9 +1,25 @@
+import ctypes
+
 import numpy as np
 import win32con
 import win32gui
 import win32ui
-
 from PIL import Image
+
+
+def set_dpi_awareness():
+    """
+    屏幕缩放，参考https://stackoverflow.com/questions/44398075/can-dpi-scaling-be-enabled-disabled-programmatically-on-a-per-session-basis
+    :return:
+    """
+    # Query DPI Awareness (Windows 10 and 8)
+    awareness = ctypes.c_int()
+    ctypes.windll.shcore.GetProcessDpiAwareness(0, ctypes.byref(awareness))
+
+    # Set DPI Awareness  (Windows 10 and 8)
+    ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    # the argument is the awareness level, which can be 0, 1 or 2:
+    # for 1-to-1 pixel control I seem to need it to be non-zero (I'm using level 2)
 
 
 def get_window_coordinate(handle):
