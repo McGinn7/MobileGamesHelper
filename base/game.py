@@ -1,6 +1,7 @@
 # coding=utf-8
 import json
 import os
+import time
 from abc import abstractmethod
 
 import cv2
@@ -87,17 +88,23 @@ class Game:
 
     def forward(self, page_key, button=None, timeout=90):
         if button:
-            button_file = self.resources.get('button', dict()).get(button, None)
-            while timeout > 0:
-                position = self._detect_position(button_file)
-                if position:
-                    self.click(position)
-                    break
-                timeout -= 1
+            if isinstance(button, str):
+                button_file = self.resources.get('button', dict()).get(button, None)
+                while timeout > 0:
+                    position = self._detect_position(button_file)
+                    if position:
+                        self.click(position)
+                        break
+                    timeout -= 1
+                    time.sleep(1)
+            elif isinstance(button, tuple) or isinstance(button, list):
+                self.click(button)
         page_key_file = self.resources.get('page_key', dict()).get(page_key, None)
         if page_key_file:
             while timeout > 0:
                 position = self._detect_position(page_key_file)
                 if position:
-                    break
+                    return position
                 timeout -= 1
+                time.sleep(1)
+        return None
