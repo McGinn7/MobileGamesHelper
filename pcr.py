@@ -11,7 +11,7 @@ class PCR(Game, ABC):
     def __init__(self, game_name):
         super().__init__(game_name)
 
-    def simple_loop(self):
+    def simple_loop(self, loop_time=1):
         # check current page is challenge?
         button_challenge = self._detect_position(self.resources.get('page_key', dict()).get('challenge', None))
         if not button_challenge:
@@ -20,17 +20,19 @@ class PCR(Game, ABC):
         if not button_start_fight:
             return
         self.forward('challenge_end', button_start_fight)
-        button_next_step = self._detect_position(self.resources.get('button', dict()).get('next_step', None))
-        if not button_next_step:
-            return
-        button_challenge_again = self.forward('challenge_again', button_next_step)
-        if not button_challenge_again:
-            return
-        if not self.forward('checkpoint_again', button_challenge_again):
-            return
-        button_ok = self._detect_position(self.resources.get('button', dict()).get('ok', None))
-        if not button_ok:
-            return
+        for i in range(loop_time - 1):
+            button_next_step = self._detect_position(self.resources.get('button', dict()).get('next_step', None))
+            if not button_next_step:
+                return
+            button_challenge_again = self.forward('challenge_again', button_next_step)
+            if not button_challenge_again:
+                return
+            if not self.forward('checkpoint_again', button_challenge_again):
+                return
+            button_ok = self._detect_position(self.resources.get('button', dict()).get('ok', None))
+            if not button_ok:
+                return
+            self.forward('challenge_end', button_ok)
 
         while True:
             print('oo loop')
@@ -39,7 +41,7 @@ class PCR(Game, ABC):
 
 def main():
     pcr = PCR('公主连结')
-    pcr.simple_loop()
+    pcr.simple_loop(3)
 
 
 def is_admin():
