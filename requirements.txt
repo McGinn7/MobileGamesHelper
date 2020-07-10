@@ -2,3 +2,4 @@ aircv>=1.4.6
 pywin32>=227
 opencv-python>=4.2.0.32
 numpy>=1.18.1
+Pillow>=7.0.0
