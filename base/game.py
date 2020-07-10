@@ -22,12 +22,12 @@ class Game:
         self.load_resources(self.cfg.get('resource_dir'), self.resources)
 
     def load_config(self):
-        game2config = json.load(open('../config/game2config.json', 'r', encoding='utf-8'))
+        game2config = json.load(open('./config/game2config.json', 'r', encoding='utf-8'))
         config_name = game2config.get(self.game_name, None)
         if isinstance(config_name, str):
             if not config_name.endswith('.json'):
                 config_name += '.json'
-            return json.load(open('../config/{}'.format(config_name), 'r', encoding='utf-8'))
+            return json.load(open('./config/{}'.format(config_name), 'r', encoding='utf-8'))
         return dict()
 
     def load_resources(self, path, _resources, depth=0):
