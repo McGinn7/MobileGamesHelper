@@ -14,6 +14,7 @@ from base import window
 class Game:
 
     def __init__(self, game_name):
+        window.set_dpi_awareness()
         self.game_name = game_name
         self.handle = window.find_handle_by_title_name(self.game_name)
         self.window_size = window.get_window_size(self.handle)
